@@ -86,6 +86,9 @@ def _google_login():
                 prompt="select_account",
             )
 
+            # TEMP DEBUG — show full auth URL to diagnose 403
+            st.code(auth_url, language=None)
+
             st.markdown(
                 f"""<div style="display:flex;justify-content:center;margin:8px 0">
                 <a href="{auth_url}" target="_self"
