@@ -15,7 +15,7 @@ with st.sidebar:
         logout()
 
 st.title("👤 Research Profile")
-st.markdown("Fill out your research profile so we can find the most relevant positions for you.")
+st.markdown("Fill out your research profile so we can find the most relevant academic positions for you.")
 
 RESEARCH_FIELDS = [
     "Computational Biology", "Bioinformatics", "ML/AI", "Genomics",
@@ -35,6 +35,14 @@ POSITION_TYPES = [
 
 LOCATIONS = [
     "US", "Europe", "UK", "Canada", "Asia", "Australia/NZ", "No preference",
+]
+
+DEGREE_LEVELS = [
+    "BS / Bachelor's",
+    "MS / Master's",
+    "PhD / Doctorate",
+    "MD",
+    "Other",
 ]
 
 FELLOWSHIP_PROGRAMS = [
@@ -132,11 +140,30 @@ with st.form("profile_form"):
         placeholder="e.g., Python, R, PyTorch, Nextflow, HPC, Docker",
     )
 
-    phd_completion = st.text_input(
-        "PhD completion date",
-        value=existing.get("phd_completion", ""),
-        placeholder="e.g., May 2025",
+    # --- Degrees completed with optional graduation dates ---
+    existing_degrees = {}
+    if existing.get("degrees"):
+        try:
+            existing_degrees = json.loads(existing["degrees"])
+        except (json.JSONDecodeError, TypeError):
+            existing_degrees = {}
+
+    completed_degrees = st.multiselect(
+        "Degrees completed",
+        options=DEGREE_LEVELS,
+        default=[d for d in existing_degrees if d in DEGREE_LEVELS],
+        help="Select degrees you have earned",
     )
+
+    degree_dates = {}
+    for deg in completed_degrees:
+        date_val = st.text_input(
+            f"Graduation date — {deg} (optional)",
+            value=existing_degrees.get(deg, ""),
+            placeholder="e.g., May 2024",
+            key=f"degree_date_{deg}",
+        )
+        degree_dates[deg] = date_val
 
     cv_file = st.file_uploader("Upload CV (PDF)", type=["pdf"])
 
@@ -162,7 +189,7 @@ if submitted:
         interests=interests,
         skills=skills,
         location_pref=json.dumps(location_pref),
-        phd_completion=phd_completion,
+        degrees=json.dumps(degree_dates),
         cv_text=cv_text,
     )
 
@@ -180,6 +207,10 @@ if submitted:
     st.write(f"**Interests:** {interests}")
     st.write(f"**Skills:** {skills}")
     st.write(f"**Location preference:** {', '.join(location_pref)}")
-    st.write(f"**PhD completion:** {phd_completion}")
+    if degree_dates:
+        deg_parts = []
+        for deg, dt in degree_dates.items():
+            deg_parts.append(f"{deg} ({dt})" if dt else deg)
+        st.write(f"**Degrees:** {', '.join(deg_parts)}")
     if cv_text:
         st.write(f"**CV:** {len(cv_text)} characters extracted")

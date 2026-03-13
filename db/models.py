@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     skills TEXT DEFAULT '',
     location_pref TEXT DEFAULT '[]',
     phd_completion TEXT DEFAULT '',
+    degrees TEXT DEFAULT '{}',
     cv_text TEXT DEFAULT '',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -64,6 +65,10 @@ def init_db():
         conn.execute("SELECT fellowship_programs FROM users LIMIT 1")
     except Exception:
         conn.execute("ALTER TABLE users ADD COLUMN fellowship_programs TEXT DEFAULT '[]'")
+    try:
+        conn.execute("SELECT degrees FROM users LIMIT 1")
+    except Exception:
+        conn.execute("ALTER TABLE users ADD COLUMN degrees TEXT DEFAULT '{}'")
     conn.commit()
 
 
@@ -72,16 +77,16 @@ def init_db():
 def upsert_user_profile(username: str, *, name: str, email: str,
                          research_fields: str, position_types: str,
                          fellowship_programs: str, interests: str, skills: str,
-                         location_pref: str, phd_completion: str,
+                         location_pref: str, degrees: str,
                          cv_text: str):
     conn = get_connection()
     conn.execute(
         """UPDATE users SET name=?, email=?, research_fields=?, position_types=?,
            fellowship_programs=?, interests=?, skills=?, location_pref=?,
-           phd_completion=?, cv_text=?
+           degrees=?, cv_text=?
            WHERE username=?""",
         (name, email, research_fields, position_types, fellowship_programs,
-         interests, skills, location_pref, phd_completion, cv_text, username),
+         interests, skills, location_pref, degrees, cv_text, username),
     )
     conn.commit()
 

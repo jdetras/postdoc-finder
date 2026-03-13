@@ -2,7 +2,7 @@ import sqlite3
 import threading
 from pathlib import Path
 
-_DB_PATH = Path(__file__).resolve().parent.parent / "postdoc_finder.db"
+_DB_PATH = Path(__file__).resolve().parent.parent / "academic_finder.db"
 _local = threading.local()
 
 

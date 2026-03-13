@@ -82,7 +82,7 @@ st.dataframe(
 
 # --- Export CSV ---
 csv = df.to_csv(index=False)
-st.download_button("📥 Export to CSV", csv, "postdoc_matches.csv", "text/csv")
+st.download_button("📥 Export to CSV", csv, "academic_matches.csv", "text/csv")
 
 st.divider()
 

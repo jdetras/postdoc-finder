@@ -57,7 +57,7 @@ class ScraperAgent:
         """
         search_terms = kw_gen.generate(user_profile)
         if not search_terms:
-            search_terms = ["postdoc"]
+            search_terms = ["academic position"]
 
         all_jobs: list[dict] = []
         stats: dict[str, dict] = {}

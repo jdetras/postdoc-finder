@@ -3,8 +3,8 @@ from auth import require_auth, logout
 from db.models import init_db, get_all_jobs, get_user_profile
 
 st.set_page_config(
-    page_title="PostdocFinder",
-    page_icon="🔬",
+    page_title="AcademicFinder",
+    page_icon="🎓",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -22,9 +22,9 @@ with st.sidebar:
         logout()
 
 # --- Home page ---
-st.title("🔬 PostdocFinder")
+st.title("🎓 AcademicFinder")
 st.markdown(
-    "Find postdoctoral positions tailored to your research profile. "
+    "Find academic positions tailored to your research profile. "
     "Scrapes 8 academic job boards, matches positions to your skills "
     "and interests using AI, and ranks them by relevance and urgency."
 )
@@ -41,7 +41,7 @@ with col1:
 
 with col2:
     jobs = get_all_jobs()
-    st.metric("Jobs in Database", len(jobs))
+    st.metric("Positions Found", len(jobs))
 
 with col3:
     last_scan = st.session_state.get("last_scan_time", "Never")
@@ -52,6 +52,6 @@ st.divider()
 st.markdown("### Getting Started")
 st.markdown(
     "1. **Profile** — Fill in your research field, interests, and skills\n"
-    "2. **Jobs** — Click *Scan for Jobs* to scrape 8 academic job boards\n"
+    "2. **Positions** — Click *Scan for Positions* to scrape 8 academic boards\n"
     "3. **Matches** — View positions ranked by match % and deadline urgency"
 )
