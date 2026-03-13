@@ -41,13 +41,16 @@ def _google_login():
     try:
         client_id = st.secrets["google"]["client_id"]
         client_secret = st.secrets["google"]["client_secret"]
-        redirect_uri = st.secrets["google"].get("redirect_uri", "http://localhost:8501")
+        redirect_uri = st.secrets["google"].get("redirect_uri", "http://localhost:8501").rstrip("/")
 
         # Allow insecure transport only for local dev (http://localhost)
         if redirect_uri.startswith("http://localhost"):
             os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
         else:
             os.environ.pop("OAUTHLIB_INSECURE_TRANSPORT", None)
+
+        # TEMP DEBUG — remove once OAuth is confirmed working on cloud
+        st.caption(f"🔍 OAuth redirect_uri in use: `{redirect_uri}`")
 
         params = st.query_params
 
