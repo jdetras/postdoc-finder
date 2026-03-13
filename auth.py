@@ -38,13 +38,16 @@ def _google_login():
         "https://www.googleapis.com/auth/userinfo.profile",
     ]
 
-    # Allow insecure transport for local dev (http://localhost)
-    os.environ.setdefault("OAUTHLIB_INSECURE_TRANSPORT", "1")
-
     try:
         client_id = st.secrets["google"]["client_id"]
         client_secret = st.secrets["google"]["client_secret"]
         redirect_uri = st.secrets["google"].get("redirect_uri", "http://localhost:8501")
+
+        # Allow insecure transport only for local dev (http://localhost)
+        if redirect_uri.startswith("http://localhost"):
+            os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+        else:
+            os.environ.pop("OAUTHLIB_INSECURE_TRANSPORT", None)
 
         params = st.query_params
 
